@@ -13,6 +13,7 @@ dist/
 
 ### IDEs ###
 # STS (Spring Tools Suite)
+.metadata
 .apt_generated
 .classpath
 .factorypath
