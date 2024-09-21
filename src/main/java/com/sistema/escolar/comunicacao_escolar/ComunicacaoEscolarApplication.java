@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 import com.sistema.escolar.model.Aluno;
 import com.sistema.escolar.model.Funcionario;
+import com.sistema.escolar.model.Noticia;
 import com.sistema.escolar.model.Pai;
 import com.sistema.escolar.model.Professor;
 
@@ -42,5 +43,13 @@ public class ComunicacaoEscolarApplication {
 
 		// Exibindo as informações do funcionário
 		System.out.println(funcionario.toString());
+
+		// Criando uma noticia
+		Noticia noticia = new Noticia("Primeira noticia!", "O impossivel é só questão de opinião",
+				LocalDate.of(2024, 9, 21), professor, "https://www.homer/imgs");
+
+		// Exibindo as informações da noticia
+		System.out.println(noticia.toString());
+
 	}
 }

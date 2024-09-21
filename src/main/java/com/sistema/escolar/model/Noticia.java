@@ -2,6 +2,8 @@ package com.sistema.escolar.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
@@ -19,8 +21,11 @@ public class Noticia {
 	private String titulo;
 
 	@NotBlank(message = "O conteúdo é obrigatório!")
+	@Size(min = 10, max = 5000, message = "O conteúdo deve ter entre 10 e 5000 caracteres.")
 	private String conteudo;
 
+	@NotNull(message = "A data de publicação é obrigatória!")
+	@PastOrPresent(message = "A data de publicação não pode ser no futuro.")
 	private LocalDate dataPublicacao;
 
 	// Relacionamento com Funcionario (autor da notícia)
@@ -28,16 +33,21 @@ public class Noticia {
 	@JoinColumn(name = "funcionario_id")
 	private Funcionario funcionario;
 
+	@Size(max = 255, message = "O URL da imagem não pode exceder 255 caracteres.")
+	private String imagemUrl; // URL da imagem
+
 	// Construtor padrão
 	public Noticia() {
 	}
 
 	// Construtor completo
-	public Noticia(String titulo, String conteudo, LocalDate dataPublicacao, Funcionario funcionario) {
+	public Noticia(String titulo, String conteudo, LocalDate dataPublicacao, Funcionario funcionario,
+			String imagemUrl) {
 		this.titulo = titulo;
 		this.conteudo = conteudo;
 		this.dataPublicacao = dataPublicacao;
 		this.funcionario = funcionario;
+		this.imagemUrl = imagemUrl;
 	}
 
 	// Getters e Setters
@@ -81,9 +91,18 @@ public class Noticia {
 		this.funcionario = funcionario;
 	}
 
+	public String getImagemUrl() {
+		return imagemUrl;
+	}
+
+	public void setImagemUrl(String imagemUrl) {
+		this.imagemUrl = imagemUrl;
+	}
+
 	@Override
 	public String toString() {
 		return "Noticia{" + "id=" + id + ", titulo='" + titulo + '\'' + ", conteudo='" + conteudo + '\''
-				+ ", dataPublicacao=" + dataPublicacao + ", funcionario=" + funcionario.getNome() + '}';
+				+ ", dataPublicacao=" + dataPublicacao + ", funcionario=" + funcionario.getNome() + ", imagemUrl='"
+				+ imagemUrl + '\'' + '}';
 	}
 }
