@@ -1,35 +1,29 @@
 package com.sistema.escolar.model;
 
+import org.springframework.security.core.GrantedAuthority;
 import jakarta.persistence.*;
-import java.util.Set;
 
 @Entity
-public class Role {
+public class Role implements GrantedAuthority {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String name;
+	private String name; // Este será o campo usado como authority
 
-	@ManyToMany(mappedBy = "roles")
-	private Set<User> users;
+	// Implementação do método da interface GrantedAuthority
+	@Override
+	public String getAuthority() {
+		return name; // Retorna o nome da role como autoridade
+	}
 
-	// Getters e Setters
-
+	// Getter e Setter para 'name'
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Set<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(Set<User> users) {
-		this.users = users;
 	}
 }

@@ -1,15 +1,13 @@
-// Caminho sugerido: com/sistema/escolar/request/LoginRequest.java
 package com.sistema.escolar.request;
 
-public class LoginRequest {
+class LoginRequest {
 	private String username;
 	private String password;
 
-	// Construtor vazio
+	// Construtores, se necessário
 	public LoginRequest() {
 	}
 
-	// Construtor com parâmetros
 	public LoginRequest(String username, String password) {
 		this.username = username;
 		this.password = password;
