@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sistema.escolar.model.Role;
-import com.sistema.escolar.repository.RoleRepository;
 import com.sistema.escolar.request.UserRegistrationRequest;
 import com.sistema.escolar.service.UserService;
 
@@ -22,20 +21,14 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private RoleRepository roleRepository;
-
 	@PostMapping("/register")
 	public ResponseEntity<String> registerUser(@RequestBody UserRegistrationRequest request) {
 		try {
 			Set<Role> roles = new HashSet<>();
 			for (String roleName : request.getRoles()) {
-				Role role = roleRepository.findByName(roleName); // Buscar a role pelo nome no banco de dados
-				if (role != null) {
-					roles.add(role);
-				} else {
-					return ResponseEntity.badRequest().body("Role não encontrada: " + roleName);
-				}
+				Role role = new Role();
+				role.setAuthority(roleName); // Define o papel/autoridade
+				roles.add(role);
 			}
 
 			userService.createUser(request.getUsername(), request.getPassword(), roles);

@@ -33,18 +33,11 @@ public class UserService implements UserDetailsService {
 	}
 
 	public void createUser(String username, String password, Set<Role> roles) {
-		// Adicionar logs para depuração
-		System.out.println("Username: " + username);
-		System.out.println("Password: " + password);
-		System.out.println("Roles: " + roles);
-
-		// Criação de um novo usuário com codificação de senha
 		User newUser = new User();
-		newUser.setUsername(username); // Define o username
+		newUser.setUsername(username);
 		newUser.setPassword(passwordEncoder.encode(password)); // Codifica a senha
 		newUser.setRoles(roles); // Define as roles
 
-		// Salva o novo usuário no banco de dados
-		userRepository.save(newUser);
+		userRepository.save(newUser); // Salva o usuário no banco
 	}
 }

@@ -10,20 +10,24 @@ public class Role implements GrantedAuthority {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String name; // Este será o campo usado como authority
+	@Column(nullable = false, unique = true)
+	private String authority; // Mapeamento correto para a coluna
 
-	// Implementação do método da interface GrantedAuthority
 	@Override
 	public String getAuthority() {
-		return name; // Retorna o nome da role como autoridade
+		return authority;
 	}
 
-	// Getter e Setter para 'name'
-	public String getName() {
-		return name;
+	public void setAuthority(String authority) {
+		this.authority = authority;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	// Getters e Setters
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

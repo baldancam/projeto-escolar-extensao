@@ -3,12 +3,12 @@ package com.sistema.escolar.request;
 import java.util.Set;
 
 public class UserRegistrationRequest {
+
 	private String username;
 	private String password;
 	private Set<String> roles;
 
 	// Getters e Setters
-
 	public String getUsername() {
 		return username;
 	}
