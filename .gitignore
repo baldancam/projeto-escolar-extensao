@@ -13,6 +13,7 @@ dist/
 
 ### IDEs ###
 # STS (Spring Tools Suite)
+.metadata
 .apt_generated
 .classpath
 .factorypath
@@ -40,4 +41,6 @@ dist/
 .DS_Store
 Thumbs.db
 
+# Ignorar arquivo de configuração de aplicação
 application.properties
+
