@@ -14,6 +14,7 @@ public class User implements UserDetails {
 	private Long id;
 
 	private String username;
+
 	private String password;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -22,7 +23,7 @@ public class User implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return roles;
+		return roles; // Retorna as roles que implementam GrantedAuthority
 	}
 
 	@Override
@@ -37,22 +38,22 @@ public class User implements UserDetails {
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return true;
+		return true; // Implementação padrão
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return true;
+		return true; // Implementação padrão
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return true;
+		return true; // Implementação padrão
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return true; // Implementação padrão
 	}
 
 	// Getters e Setters
@@ -70,6 +71,10 @@ public class User implements UserDetails {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Set<Role> getRoles() {
+		return roles; // Retorna o conjunto de roles do usuário
 	}
 
 	public void setRoles(Set<Role> roles) {

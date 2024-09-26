@@ -1,19 +1,10 @@
 package com.sistema.escolar.request;
 
-class LoginRequest {
+public class LoginRequest {
 	private String username;
 	private String password;
 
-	// Construtores, se necessário
-	public LoginRequest() {
-	}
-
-	public LoginRequest(String username, String password) {
-		this.username = username;
-		this.password = password;
-	}
-
-	// Getters e Setters
+	// Getters e setters
 	public String getUsername() {
 		return username;
 	}

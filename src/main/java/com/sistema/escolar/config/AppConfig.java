@@ -1,4 +1,4 @@
-package com.sistema.escolar.security;
+package com.sistema.escolar.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
