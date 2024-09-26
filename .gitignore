@@ -41,7 +41,6 @@ dist/
 .DS_Store
 Thumbs.db
 
-
 # Ignorar arquivo de configuração de aplicação
 application.properties
 
