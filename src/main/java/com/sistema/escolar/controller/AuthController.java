@@ -11,6 +11,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -20,27 +22,25 @@ public class AuthController {
 	private final JwtTokenProvider tokenProvider;
 	private final UserService userService;
 
+	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+
 	@Autowired
 	public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider tokenProvider,
 			UserService userService) {
+		logger.debug("AuthController: Constructor initialized");
 		this.authenticationManager = authenticationManager;
 		this.tokenProvider = tokenProvider;
 		this.userService = userService;
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<JwtResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
-
-		// Autenticar o usuário
+	public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		// Gerar token JWT
-		String jwt = tokenProvider.generateToken(authentication);
-
-		return ResponseEntity
-				.ok(new JwtResponse(jwt, authentication.getName(), userService.getUserRoles(authentication.getName())));
+		return ResponseEntity.ok("Autenticado com sucesso");
 	}
+
 }
