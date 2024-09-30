@@ -1,0 +1,111 @@
+[33mcommit ce7a0829d14331af20ffa8b99e85c967ee8c5eda[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: baldancam <baldancama@gmail.com>
+Date:   Fri Sep 27 20:03:36 2024 -0300
+
+    security error - não solucionado
+
+[33mcommit f547ff30ea166699825eed3159e1fb0685c1a1c6[m
+Author: baldancam <baldancama@gmail.com>
+Date:   Thu Sep 26 20:51:29 2024 -0300
+
+    add metodo JWT
+
+[33mcommit ae2f4991af83fe2728afa4967ef7a7e049a6ee5d[m
+Author: baldancam <baldancama@gmail.com>
+Date:   Thu Sep 26 19:49:15 2024 -0300
+
+    Salvando mudanças antes de trocar de branch
+
+[33mcommit cb40d4d0fdc3438da251a381da578374334ba1d2[m
+Author: baldancam <baldancama@gmail.com>
+Date:   Thu Sep 26 19:45:05 2024 -0300
+
+    Remove application.properties do controle de versão na branch <nome-da-branch>
+
+[33mcommit 30a8821675cd0805d895c971b89bdcca1a4c54f4[m
+Merge: fb1fbd3 bccbcb0
+Author: Matheus Baldança <101199501+baldancam@users.noreply.github.com>
+Date:   Thu Sep 26 19:54:35 2024 -0300
+
+    Merge pull request #1 from baldancam/develop
+    
+    Remove application.properties do controle de versão na branch <nome-d…
+
+[33mcommit bccbcb019e121218639dc84d58f4c33f9fcd78a6[m
+Merge: 890ab4c fb1fbd3
+Author: Matheus Baldança <101199501+baldancam@users.noreply.github.com>
+Date:   Thu Sep 26 19:54:26 2024 -0300
+
+    Merge branch 'master' into develop
+
+[33mcommit 890ab4c60c525da7c395c52417f606227e17a826[m[33m ([m[1;31morigin/develop[m[33m, [m[1;32mdevelop[m[33m)[m
+Author: baldancam <baldancama@gmail.com>
+Date:   Thu Sep 26 19:51:08 2024 -0300
+
+    Remove application.properties do controle de versão na branch <nome-da-branch>
+
+[33mcommit fb1fbd3b4faa5b427dd892908b3c27362c5df1f3[m
+Author: baldancam <baldancama@gmail.com>
+Date:   Thu Sep 26 19:41:45 2024 -0300
+
+    Remove application.properties do controle de versão
+
+[33mcommit dab77f7806b20c1311d3b34eb1eb9e2fd96df725[m
+Author: baldancam <baldancama@gmail.com>
+Date:   Mon Sep 23 22:24:30 2024 -0300
+
+    tentando achar o erro
+
+[33mcommit 4e045ae065c416b1a550c2156e4cebb406a11b98[m
+Author: baldancam <baldancama@gmail.com>
+Date:   Sun Sep 22 18:55:44 2024 -0300
+
+    security add
+
+[33mcommit 3ac345b5ab42ccf954548f252bcacd537327565a[m
+Author: baldancam <baldancama@gmail.com>
+Date:   Sat Sep 21 15:33:18 2024 -0300
+
+    create crud
+
+[33mcommit 742339d48a8eafc9466dc3de5129df02cd11dd5f[m
+Author: baldancam <baldancama@gmail.com>
+Date:   Fri Sep 20 20:38:37 2024 -0300
+
+    add class noticia
+
+[33mcommit ac8f4c27d5b101ed052872c7a046eff70021dfee[m
+Author: baldancam <baldancama@gmail.com>
+Date:   Thu Sep 19 21:00:20 2024 -0300
+
+    add entidades + criacao de tabelas bd
+
+[33mcommit 23c9c41dddcb65c1857cb67b62bb23527f496df2[m
+Author: baldancam <baldancama@gmail.com>
+Date:   Mon Sep 9 20:30:12 2024 -0300
+
+    Remove .metadata folder from Git tracking
+
+[33mcommit 2e613705f3c999b8004a1a8576aaf35e9825a510[m
+Author: baldancam <baldancama@gmail.com>
+Date:   Mon Sep 9 20:23:31 2024 -0300
+
+    add class Aluno and Professor
+
+[33mcommit d53381301a9f7935f0d5db65df5cc728f833ddd3[m
+Author: Matheus Baldança <101199501+baldancam@users.noreply.github.com>
+Date:   Sat Sep 7 15:22:36 2024 -0300
+
+    Create README.md
+
+[33mcommit d905fb4a9727695da4087cd34e80bbfeb09d394e[m
+Author: baldancam <baldancama@gmail.com>
+Date:   Sat Sep 7 14:22:08 2024 -0300
+
+    first commit
+
+[33mcommit 394b749174eba3c81795879068d9a5d84b1b55f4[m
+Author: baldancam <baldancama@gmail.com>
+Date:   Sat Sep 7 14:01:25 2024 -0300
+
+    first commit

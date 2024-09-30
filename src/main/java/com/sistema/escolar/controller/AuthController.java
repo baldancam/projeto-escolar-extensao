@@ -11,36 +11,34 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-	private final AuthenticationManager authenticationManager;
-	private final JwtTokenProvider tokenProvider;
-	private final UserService userService;
-
-	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
 	@Autowired
-	public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider tokenProvider,
-			UserService userService) {
-		logger.debug("AuthController: Constructor initialized");
-		this.authenticationManager = authenticationManager;
-		this.tokenProvider = tokenProvider;
-		this.userService = userService;
-	}
+	private JwtTokenProvider tokenProvider;
+
+	@Autowired
+	private UserService userService;
 
 	@PostMapping("/login")
-	public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+	public ResponseEntity<JwtResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
+		// Autenticar o usuário
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
+		// Definir contexto de segurança
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		return ResponseEntity.ok("Autenticado com sucesso");
-	}
+		// Gerar o token JWT
+		String jwt = tokenProvider.generateToken(authentication);
 
+		// Retornar a resposta com o token JWT e informações do usuário
+		return ResponseEntity
+				.ok(new JwtResponse(jwt, authentication.getName(), userService.getUserRoles(authentication.getName())));
+	}
 }

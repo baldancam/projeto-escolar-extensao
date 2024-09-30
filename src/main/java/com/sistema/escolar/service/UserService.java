@@ -33,39 +33,30 @@ public class UserService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByUsername(username);
-		if (user == null) {
-			throw new UsernameNotFoundException("Usuário não encontrado");
-		}
-		return user;
+		return userRepository.findByUsername(username)
+				.orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 	}
 
 	public void createUser(String username, String password, Set<Role> roles) {
-		Set<Role> verifiedRoles = new HashSet<>();
-		for (Role role : roles) {
-			Optional<Role> existingRole = roleRepository.findByAuthority(role.getAuthority());
-			if (existingRole.isEmpty()) {
-				roleRepository.save(role); // Salva o novo papel se não existir
-				verifiedRoles.add(role); // Adiciona o novo papel
-			} else {
-				verifiedRoles.add(existingRole.get()); // Adiciona o papel existente
-			}
+		if (userRepository.findByUsername(username).isPresent()) {
+			throw new RuntimeException("Usuário já existe!");
 		}
+
+		Set<Role> verifiedRoles = roles.stream().map(
+				role -> roleRepository.findByAuthority(role.getAuthority()).orElseGet(() -> roleRepository.save(role)))
+				.collect(Collectors.toSet());
 
 		User newUser = new User();
 		newUser.setUsername(username);
-		newUser.setPassword(passwordEncoder.encode(password)); // Codifica a senha
-		newUser.setRoles(verifiedRoles); // Usa os papéis verificados
+		newUser.setPassword(passwordEncoder.encode(password));
+		newUser.setRoles(verifiedRoles);
 
-		userRepository.save(newUser); // Salva o usuário no banco
+		userRepository.save(newUser);
 	}
 
-	// Novo método para obter as roles de um usuário
 	public List<String> getUserRoles(String username) {
-		User user = userRepository.findByUsername(username);
-		if (user != null) {
-			return user.getRoles().stream().map(Role::getAuthority).collect(Collectors.toList());
-		}
-		return List.of(); // Retorna uma lista vazia se o usuário não for encontrado
+		return userRepository.findByUsername(username)
+				.map(user -> user.getRoles().stream().map(Role::getAuthority).collect(Collectors.toList()))
+				.orElse(List.of());
 	}
 }
