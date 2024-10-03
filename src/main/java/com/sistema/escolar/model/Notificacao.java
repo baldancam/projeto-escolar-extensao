@@ -25,10 +25,6 @@ public class Notificacao {
 	@JoinColumn(name = "destinatario_id")
 	private Funcionario destinatario;
 
-	// Construtor padrão
-	public Notificacao() {
-	}
-
 	// Construtor completo
 	public Notificacao(String conteudo, Funcionario remetente, Funcionario destinatario) {
 		this.conteudo = conteudo;
@@ -69,9 +65,4 @@ public class Notificacao {
 		this.destinatario = destinatario;
 	}
 
-	@Override
-	public String toString() {
-		return "Notificacao{" + "id=" + id + ", conteudo='" + conteudo + '\'' + ", remetente=" + remetente.getNome()
-				+ ", destinatario=" + destinatario.getNome() + '}';
-	}
 }

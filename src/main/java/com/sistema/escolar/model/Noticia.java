@@ -16,10 +16,10 @@ import com.sistema.escolar.dto.NoticiasRequestDTO;
 
 @Entity(name = "noticias")
 @Table(name = "tb_noticias")
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
+@Getter
 public class Noticia {
 
 	@Id
@@ -38,7 +38,6 @@ public class Noticia {
 	@PastOrPresent(message = "A data de publicação não pode ser no futuro.")
 	private LocalDate dataPublicacao;
 
-	// Relacionamento com Funcionario (autor da notícia)
 	@ManyToOne
 	@JoinColumn(name = "funcionario_id")
 	private Funcionario funcionario;
@@ -47,11 +46,17 @@ public class Noticia {
 	private String imagemUrl; // URL da imagem
 
 	// Construtor que usa o DTO
-	public Noticia(NoticiasRequestDTO data) {
-		this.titulo = data.titulo();
-		this.conteudo = data.conteudo();
-		this.dataPublicacao = data.dataPublicacao();
-		this.funcionario = data.funcionario();
-		this.imagemUrl = data.imagemUrl();
+	public Noticia(NoticiasRequestDTO data, Funcionario funcionario) {
+	    this.titulo = data.titulo();
+	    this.conteudo = data.conteudo();
+	    this.dataPublicacao = data.dataPublicacao();
+	    this.funcionario = funcionario; // Associar o funcionário
+	    this.imagemUrl = data.imagemUrl();
+	}
+
+
+	// Método setter para associar o funcionário
+	public void setFuncionario(Funcionario funcionario) {
+		this.funcionario = funcionario;
 	}
 }
