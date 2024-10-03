@@ -1,15 +1,23 @@
 package com.sistema.escolar.model;
 
 import java.time.LocalDate;
-
+import com.sistema.escolar.dto.FuncionarioRequestDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "tb_funcionario")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Funcionario {
 
 	@Id
@@ -23,74 +31,14 @@ public class Funcionario {
 	private String email;
 	private String funcao;
 
-	// Construtor completo
-	public Funcionario(String nome, String matricula, LocalDate dataNascimento, String telefone, String email,
-			String funcao) {
-		this.nome = nome;
-		this.matricula = matricula;
-		this.dataNascimento = dataNascimento;
-		this.telefone = telefone;
-		this.email = email;
-		this.funcao = funcao;
+	// Construtor utilizando o DTO
+	public Funcionario(FuncionarioRequestDTO data) {
+		this.nome = data.nome();
+		this.matricula = data.matricula();
+		this.dataNascimento = data.dataNascimento();
+		this.telefone = data.telefone();
+		this.email = data.email();
+		this.funcao = data.funcao();
 	}
 
-	// Construtor padrão (necessário para o JPA)
-	public Funcionario() {
-	}
-
-	// Getters e Setters
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getMatricula() {
-		return matricula;
-	}
-
-	public void setMatricula(String matricula) {
-		this.matricula = matricula;
-	}
-
-	public LocalDate getDataNascimento() {
-		return dataNascimento;
-	}
-
-	public void setDataNascimento(LocalDate dataNascimento) {
-		this.dataNascimento = dataNascimento;
-	}
-
-	public String getTelefone() {
-		return telefone;
-	}
-
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getFuncao() {
-		return funcao;
-	}
-
-	public void setFuncao(String funcao) {
-		this.funcao = funcao;
-	}
-
-	@Override
-	public String toString() {
-		return "Funcionario{" + "nome='" + nome + '\'' + ", matricula='" + matricula + '\'' + ", dataNascimento="
-				+ dataNascimento + ", telefone='" + telefone + '\'' + ", email='" + email + '\'' + ", funcao='" + funcao
-				+ '\'' + '}';
-	}
 }

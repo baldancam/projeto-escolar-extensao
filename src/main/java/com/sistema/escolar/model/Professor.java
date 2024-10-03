@@ -1,34 +1,31 @@
 package com.sistema.escolar.model;
 
-import java.time.LocalDate;
+import com.sistema.escolar.dto.FuncionarioRequestDTO;
+import jakarta.persistence.Entity;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import jakarta.validation.constraints.NotBlank;
-
+@Entity
+@Getter
+@NoArgsConstructor
 public class Professor extends Funcionario {
 
-	@NotBlank(message = "A turma é obrigatória!")
+	// Campos específicos de Professor
 	private String turma;
 
-	// Construtor completo
-	public Professor(String nome, String matricula, LocalDate dataNascimento, String telefone, String email,
-			String turma) {
-		super(nome, matricula, dataNascimento, telefone, email, "PROFESSOR");
+	// Construtor que chama o super (Funcionario)
+	public Professor(FuncionarioRequestDTO data, String turma) {
+		super(data); // Chama o construtor da superclasse
 		this.turma = turma;
 	}
 
-	// Getters e Setters
+	// Getter e setter
 	public String getTurma() {
 		return turma;
 	}
 
 	public void setTurma(String turma) {
 		this.turma = turma;
-	}
 
-	@Override
-	public String toString() {
-		return "Professor{" + "nome='" + getNome() + '\'' + ", matricula='" + getMatricula() + '\''
-				+ ", dataNascimento=" + getDataNascimento() + ", telefone='" + getTelefone() + '\'' + ", email='"
-				+ getEmail() + '\'' + ", turma='" + turma + '\'' + '}';
 	}
 }
