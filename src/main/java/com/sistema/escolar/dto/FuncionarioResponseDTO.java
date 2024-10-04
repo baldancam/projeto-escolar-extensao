@@ -1,10 +1,11 @@
 package com.sistema.escolar.dto;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import com.sistema.escolar.model.Funcionario;
 
-public record FuncionarioResponseDTO(Long id, String nome, String matricula, LocalDate dataNascimento, String telefone,
+public record FuncionarioResponseDTO(UUID id, String nome, String matricula, LocalDate dataNascimento, String telefone,
 		String email, String funcao) {
 
 	public FuncionarioResponseDTO(Funcionario funcionario) {

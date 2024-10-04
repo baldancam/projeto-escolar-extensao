@@ -1,7 +1,8 @@
 package com.sistema.escolar.dto;
 
-import java.time.LocalDate;
+import java.util.UUID;
+import java.time.LocalDateTime;
 
-public record NoticiasRequestDTO(String titulo, String conteudo, LocalDate dataPublicacao, Long funcionarioId,
+public record NoticiasRequestDTO(String titulo, String conteudo, LocalDateTime dataPublicacao, UUID funcionarioId,
 		String imagemUrl) {
 }

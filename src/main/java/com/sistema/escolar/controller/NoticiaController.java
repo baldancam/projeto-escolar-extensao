@@ -1,11 +1,15 @@
 package com.sistema.escolar.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,4 +49,39 @@ public class NoticiaController {
 				.toList();
 		return noticiaList; // Retorna a lista de notícias
 	}
+
+	// Editar notícia existente
+	@PutMapping("/{id}")
+	public ResponseEntity<Void> updateNoticia(@PathVariable UUID id, @RequestBody NoticiasRequestDTO data) {
+		// Buscar a notícia no banco de dados pelo ID
+		Noticia noticiaExistente = noticiaRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Notícia não encontrada!"));
+
+		// Atualizar os dados da notícia
+		noticiaExistente.setTitulo(data.titulo());
+		noticiaExistente.setConteudo(data.conteudo());
+		noticiaExistente.setDataPublicacao(data.dataPublicacao());
+		noticiaExistente.setImagemUrl(data.imagemUrl());
+
+		// Associar o novo funcionário, caso o ID do funcionário tenha mudado
+		if (data.funcionarioId() != null) {
+			Funcionario funcionario = funcionarioRepository.findById(data.funcionarioId())
+					.orElseThrow(() -> new RuntimeException("Funcionário não encontrado!"));
+			noticiaExistente.setFuncionario(funcionario);
+		}
+
+		// Salvar as alterações no banco de dados
+		noticiaRepository.save(noticiaExistente);
+		return ResponseEntity.ok().build();
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteNoticia(@PathVariable UUID id) {
+		if (noticiaRepository.existsById(id)) {
+			noticiaRepository.deleteById(id);
+			return ResponseEntity.noContent().build(); // Retorna 204 No Content se deletado com sucesso
+		}
+		return ResponseEntity.notFound().build(); // Retorna 404 Not Found se a notícia não for encontrada
+	}
+
 }

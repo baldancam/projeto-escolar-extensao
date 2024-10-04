@@ -1,10 +1,10 @@
 package com.sistema.escolar.model;
 
 import java.time.LocalDate;
+import java.util.UUID;
 import com.sistema.escolar.dto.FuncionarioRequestDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Table(name = "tb_funcionario")
@@ -23,8 +24,9 @@ import lombok.Setter;
 public class Funcionario {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@GeneratedValue
+	@UuidGenerator
+	private UUID id;
 
 	private String nome;
 	private String matricula;
@@ -42,5 +44,4 @@ public class Funcionario {
 		this.email = data.email();
 		this.funcao = data.funcao();
 	}
-
 }
