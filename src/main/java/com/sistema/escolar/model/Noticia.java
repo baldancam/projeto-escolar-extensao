@@ -47,16 +47,11 @@ public class Noticia {
 
 	// Construtor que usa o DTO
 	public Noticia(NoticiasRequestDTO data, Funcionario funcionario) {
-	    this.titulo = data.titulo();
-	    this.conteudo = data.conteudo();
-	    this.dataPublicacao = data.dataPublicacao();
-	    this.funcionario = funcionario; // Associar o funcionário
-	    this.imagemUrl = data.imagemUrl();
+		this.titulo = data.titulo();
+		this.conteudo = data.conteudo();
+		this.dataPublicacao = data.dataPublicacao();
+		this.funcionario = funcionario; // Associar o funcionário
+		this.imagemUrl = data.imagemUrl();
 	}
 
-
-	// Método setter para associar o funcionário
-	public void setFuncionario(Funcionario funcionario) {
-		this.funcionario = funcionario;
-	}
 }

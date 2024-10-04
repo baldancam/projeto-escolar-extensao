@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sistema.escolar.dto.NoticiasRequestDTO;
@@ -16,8 +17,6 @@ import com.sistema.escolar.model.Noticia;
 import com.sistema.escolar.repository.FuncionarioRepository;
 import com.sistema.escolar.repository.NoticiaRepository;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-
 @RestController
 @RequestMapping("noticias")
 public class NoticiaController {
@@ -26,24 +25,24 @@ public class NoticiaController {
 	private NoticiaRepository noticiaRepository;
 
 	@Autowired
-	private FuncionarioRepository funcionarioRepository; // Injetar o repositório do Funcionario
+	private FuncionarioRepository funcionarioRepository;
 
-	// Criar nova notícia
+	// Endpoint para criar uma nova notícia
 	@PostMapping
-	public ResponseEntity<String> saveNoticia(@RequestBody NoticiasRequestDTO data) {
+	public ResponseEntity<Void> saveNoticia(@RequestBody NoticiasRequestDTO data) {
 		Funcionario funcionario = funcionarioRepository.findById(data.funcionarioId())
 				.orElseThrow(() -> new RuntimeException("Funcionário não encontrado!"));
 
-		Noticia noticiaData = new Noticia(data, funcionario);
-		noticiaRepository.save(noticiaData);
-		return ResponseEntity.ok("Notícia criada com sucesso!");
+		Noticia novaNoticia = new Noticia(data, funcionario); // Cria uma nova notícia a partir do DTO
+		noticiaRepository.save(novaNoticia); // Salva a notícia no banco de dados
+		return ResponseEntity.ok().build(); // Retorna uma resposta de sucesso (HTTP 200 OK)
 	}
 
-	// Obter todas as notícias
+	// Endpoint para listar todas as notícias
 	@GetMapping
-	public ResponseEntity<List<NoticiasResponseDTO>> getAllNoticias() {
+	public List<NoticiasResponseDTO> getAll() {
 		List<NoticiasResponseDTO> noticiaList = noticiaRepository.findAll().stream().map(NoticiasResponseDTO::new)
 				.toList();
-		return ResponseEntity.ok(noticiaList);
+		return noticiaList; // Retorna a lista de notícias
 	}
 }
