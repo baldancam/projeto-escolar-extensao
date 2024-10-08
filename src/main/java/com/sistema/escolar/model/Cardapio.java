@@ -22,9 +22,6 @@ public class Cardapio {
 	@NotBlank(message = "A descrição do item é obrigatória!")
 	private String descricaoItem;
 
-	// Construtor padrão
-	public Cardapio() {
-	}
 
 	// Construtor completo
 	public Cardapio(String nomeItem, LocalDate data, String descricaoItem) {

@@ -31,15 +31,15 @@ public class Noticia {
 	private String imagemUrl; // URL da imagem
 
 	@ManyToOne
-	@JoinColumn(name = "funcionario_id")
-	private Funcionario funcionario;
+	@JoinColumn(name = "usuario_id")
+	private Usuario usuario; // Alterado para a classe Usuario
 
 	// Construtor que usa o DTO
-	public Noticia(NoticiasRequestDTO data, Funcionario funcionario) {
+	public Noticia(NoticiasRequestDTO data, Usuario usuario) {
 		this.titulo = data.titulo();
 		this.conteudo = data.conteudo();
 		this.dataPublicacao = data.dataPublicacao();
-		this.funcionario = funcionario; // Associar o funcionário
+		this.usuario = usuario; // Associar o usuário
 		this.imagemUrl = data.imagemUrl();
 	}
 }

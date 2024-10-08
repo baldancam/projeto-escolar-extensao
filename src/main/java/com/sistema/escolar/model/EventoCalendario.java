@@ -24,10 +24,6 @@ public class EventoCalendario {
 	@NotBlank(message = "A descrição do evento é obrigatória!")
 	private String descricao;
 
-	// Construtor padrão
-	public EventoCalendario() {
-	}
-
 	// Construtor completo
 	public EventoCalendario(String nomeEvento, LocalDate dataEvento, String descricao) {
 		this.nomeEvento = nomeEvento;
