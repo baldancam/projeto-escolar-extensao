@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ public class UsuarioController {
 	private UsuarioRepository usuarioRepository;
 
 	// Endpoint para criar um novo usuario
+	@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 	@PostMapping
 	public ResponseEntity<Void> saveUsuario(@Valid @RequestBody UsuarioRequestDTO data) {
 		Usuario novoUsuario = new Usuario(data); // Cria um novo usuario a partir do DTO
@@ -37,6 +39,7 @@ public class UsuarioController {
 	}
 
 	// Endpoint para listar todos os usuarios
+	@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 	@GetMapping
 	public List<UsuarioResponseDTO> getAll() {
 		List<UsuarioResponseDTO> usuarioList = usuarioRepository.findAll().stream().map(UsuarioResponseDTO::new)
@@ -45,6 +48,7 @@ public class UsuarioController {
 	}
 
 	// Buscar um usuário por ID (GET)
+	@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 	@GetMapping("/{id}")
 	public ResponseEntity<UsuarioResponseDTO> getUsuarioById(@PathVariable UUID id) {
 		Usuario usuario = usuarioRepository.findById(id)
@@ -53,6 +57,7 @@ public class UsuarioController {
 	}
 
 	// Editar um usuário (PUT)
+	@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> updateUsuario(@PathVariable UUID id, @RequestBody UsuarioRequestDTO data) {
 		Usuario usuario = usuarioRepository.findById(id)
@@ -74,6 +79,7 @@ public class UsuarioController {
 	}
 
 	// Deletar um usuário (DELETE)
+	@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteUsuario(@PathVariable UUID id) {
 		Usuario usuarioExistente = usuarioRepository.findById(id)

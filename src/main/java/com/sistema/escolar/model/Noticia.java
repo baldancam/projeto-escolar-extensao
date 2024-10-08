@@ -22,7 +22,7 @@ import com.sistema.escolar.dto.NoticiasRequestDTO;
 public class Noticia {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(generator = "UUID")
 	private UUID id; // Alterado para UUID
 
 	private String titulo;

@@ -17,7 +17,7 @@ import org.hibernate.annotations.UuidGenerator;
 public class Usuario {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(generator = "UUID")
 	@UuidGenerator
 	private UUID id;
 
