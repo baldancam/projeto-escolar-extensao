@@ -37,7 +37,7 @@ public class NoticiaController {
 		Usuario usuario = usuarioRepository.findById(usuarioId)
 				.orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 
-		if (!"ADM".equalsIgnoreCase(usuario.getFuncao())) {
+		if (!"ADM".equals(usuario.getRole())) {
 			throw new RuntimeException("Usuário não autorizado!");
 		}
 

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import com.sistema.escolar.dto.UsuarioRequestDTO;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Usuario implements UserDetails {
 
 	@Id
@@ -30,25 +32,31 @@ public class Usuario implements UserDetails {
 	private String telefone;
 	private String email;
 	private String password;
-	private String funcao; // Para diferenciar os tipos de usuário (ADM, Professor, Pai)
 	private UserRole role;
 
 	@OneToMany(mappedBy = "pai", cascade = CascadeType.ALL)
 	private List<Aluno> alunos;
 
+	public Usuario(String email, String password, UserRole role) {
+
+		this.email = email;
+		this.password = password;
+		this.role = role;
+
+	}
+
 	// Construtor utilizando o DTO
 	public Usuario(UsuarioRequestDTO data) {
+		if (data.password() == null || data.password().isEmpty()) {
+			throw new IllegalArgumentException("A senha não pode ser nula ou vazia");
+		}
+
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		this.nome = data.nome();
 		this.telefone = data.telefone();
 		this.email = data.email();
 		this.password = passwordEncoder.encode(data.password());
-		this.funcao = data.funcao();
-		this.role = UserRole.valueOf(data.funcao().toUpperCase());
-	}
-
-	public boolean isPai() {
-		return "PAI".equalsIgnoreCase(this.funcao);
+		this.role = UserRole.valueOf(data.role().toString());
 	}
 
 	@Override

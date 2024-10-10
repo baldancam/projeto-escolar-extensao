@@ -48,7 +48,7 @@ public class AlunoController {
 		Usuario usuario = usuarioRepository.findById(data.usuarioId())
 				.orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 
-		if (!"ADM".equalsIgnoreCase(usuario.getFuncao())) {
+		if (!"ADM".equals(usuario.getRole())) {
 			return ResponseEntity.status(403).build();
 		}
 
@@ -66,7 +66,7 @@ public class AlunoController {
 		Usuario usuario = usuarioRepository.findById(data.usuarioId())
 				.orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 
-		if (!"ADM".equalsIgnoreCase(usuario.getFuncao())) {
+		if (!"ADM".equals(usuario.getRole())) {
 			return ResponseEntity.status(403).build();
 		}
 
