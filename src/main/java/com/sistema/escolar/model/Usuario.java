@@ -32,6 +32,8 @@ public class Usuario implements UserDetails {
 	private String telefone;
 	private String email;
 	private String password;
+
+	@Enumerated(EnumType.STRING)
 	private UserRole role;
 
 	@OneToMany(mappedBy = "pai", cascade = CascadeType.ALL)
@@ -56,7 +58,7 @@ public class Usuario implements UserDetails {
 		this.telefone = data.telefone();
 		this.email = data.email();
 		this.password = passwordEncoder.encode(data.password());
-		this.role = UserRole.valueOf(data.role().toString());
+		this.role = data.role();
 	}
 
 	@Override

@@ -19,6 +19,7 @@ import com.sistema.escolar.dto.NoticiasRequestDTO;
 import com.sistema.escolar.dto.NoticiasResponseDTO;
 import com.sistema.escolar.model.Usuario;
 import com.sistema.escolar.model.Noticia;
+import com.sistema.escolar.model.UserRole;
 import com.sistema.escolar.repository.UsuarioRepository;
 import com.sistema.escolar.repository.NoticiaRepository;
 
@@ -37,7 +38,7 @@ public class NoticiaController {
 		Usuario usuario = usuarioRepository.findById(usuarioId)
 				.orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 
-		if (!"ADM".equals(usuario.getRole())) {
+		if (usuario.getRole() != UserRole.ADMIN) {
 			throw new RuntimeException("Usuário não autorizado!");
 		}
 

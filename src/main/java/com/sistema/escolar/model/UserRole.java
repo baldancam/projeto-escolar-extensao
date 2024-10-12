@@ -5,7 +5,7 @@ public enum UserRole {
 
 	private String role;
 
-	private UserRole(String role) {
+	UserRole(String role) {
 		this.role = role;
 	}
 
@@ -13,4 +13,8 @@ public enum UserRole {
 		return role;
 	}
 
+	@Override
+	public String toString() {
+		return this.role;
+	}
 }

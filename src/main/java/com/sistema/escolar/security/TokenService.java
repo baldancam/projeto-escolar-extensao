@@ -20,37 +20,27 @@ public class TokenService {
 	private String secret;
 
 	public String generateToken(Usuario usuario) {
-
 		try {
 			Algorithm algorithm = Algorithm.HMAC256(secret);
-
-			String token = JWT.create().withIssuer("auth-api").withSubject(usuario.getEmail())
+			return JWT.create().withIssuer("auth-api").withSubject(usuario.getEmail())
 					.withExpiresAt(genExpirationDate()).sign(algorithm);
-
-			return token;
 		} catch (JWTCreationException exception) {
 			throw new RuntimeException("Error while generating token", exception);
 		}
-
 	}
 
 	public String validateToken(String token) {
-
 		try {
-
 			Algorithm algorithm = Algorithm.HMAC256(secret);
-
-			return JWT.require(algorithm).withIssuer("auth-api").build().verify(token).getSignature();
-
+			return JWT.require(algorithm).withIssuer("auth-api").build().verify(token).getSubject(); // Agora retornando
+																										// o assunto,
+																										// que é o email
 		} catch (JWTVerificationException exception) {
-			return "";
+			return ""; // Ou lançar uma exceção personalizada
 		}
-
 	}
 
 	private Instant genExpirationDate() {
-
 		return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
 	}
-
 }
