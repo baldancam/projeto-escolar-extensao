@@ -99,7 +99,7 @@ public class NoticiaController {
 	// Endpoint para deletar uma notícia
 	@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteNoticia(@PathVariable UUID id) {
+	public ResponseEntity<String> deleteNoticia(@PathVariable UUID id) {
 		Noticia noticia = noticiaRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Notícia não encontrada!"));
 

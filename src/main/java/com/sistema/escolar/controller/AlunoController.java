@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.sistema.escolar.dto.AlunoRequestDTO;
 import com.sistema.escolar.dto.AlunoResponseDTO;
 import com.sistema.escolar.model.Aluno;
+import com.sistema.escolar.model.UserRole;
 import com.sistema.escolar.model.Usuario;
 import com.sistema.escolar.repository.AlunoRepository;
 import com.sistema.escolar.repository.UsuarioRepository;
@@ -25,6 +26,19 @@ public class AlunoController {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
+	// Método privado para validar se o usuário é PAI
+	private Usuario validarUsuarioPai(UUID paiId) {
+		Usuario pai = usuarioRepository.findById(paiId)
+				.orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+		// Verifica se o usuário é do tipo PAI
+		if (pai.getRole() != UserRole.PAI) {
+			throw new RuntimeException("O usuário informado não é um PAI.");
+		}
+
+		return pai;
+	}
+
 	// Endpoint para listar todos os alunos (todos os usuários podem ver)
 	@GetMapping
 	public List<AlunoResponseDTO> getAll() {
@@ -36,39 +50,29 @@ public class AlunoController {
 	// pais)
 	@GetMapping("/meus-alunos/{idPai}")
 	public List<AlunoResponseDTO> getAlunosDoPai(@PathVariable UUID idPai) {
-		Usuario pai = usuarioRepository.findById(idPai).orElseThrow(() -> new RuntimeException("Pai não encontrado!"));
+		Usuario pai = validarUsuarioPai(idPai);
 
 		List<AlunoResponseDTO> alunoList = alunoRepository.findByPai(pai).stream().map(AlunoResponseDTO::new).toList();
-		return alunoList; // Retorna os alunos vinculados ao pai
+		return alunoList;
 	}
 
-	// Endpoint para criar um novo aluno (apenas ADM pode criar)
+	// Endpoint para criar um novo aluno (verifica apenas se o paiId é válido)
 	@PostMapping
 	public ResponseEntity<Void> saveAluno(@RequestBody AlunoRequestDTO data) {
-		Usuario usuario = usuarioRepository.findById(data.usuarioId())
-				.orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+		// Verifica se o usuário associado ao aluno é PAI
+		Usuario pai = validarUsuarioPai(data.paiId());
 
-		if (!"ADM".equals(usuario.getRole())) {
-			return ResponseEntity.status(403).build();
-		}
-
-		Aluno novoAluno = new Aluno(data.nome(), data.dataNascimento(), data.matricula(), data.turma(), usuario);
+		// Cria e salva o aluno
+		Aluno novoAluno = new Aluno(data.nome(), data.dataNascimento(), data.matricula(), data.turma(), pai);
 		alunoRepository.save(novoAluno);
 
 		return ResponseEntity.ok().build();
 	}
 
-	// Endpoint para editar um aluno (apenas ADM pode editar)
+	// Endpoint para editar um aluno 
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> updateAluno(@PathVariable UUID id, @RequestBody AlunoRequestDTO data) {
 		Aluno aluno = alunoRepository.findById(id).orElseThrow(() -> new RuntimeException("Aluno não encontrado!"));
-
-		Usuario usuario = usuarioRepository.findById(data.usuarioId())
-				.orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
-
-		if (!"ADM".equals(usuario.getRole())) {
-			return ResponseEntity.status(403).build();
-		}
 
 		if (data.nome() != null)
 			aluno.setNome(data.nome());
@@ -83,7 +87,7 @@ public class AlunoController {
 		return ResponseEntity.ok().build();
 	}
 
-	// Endpoint para deletar um aluno (apenas ADM pode deletar)
+	// Endpoint para deletar um aluno
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteAluno(@PathVariable UUID id) {
 		Aluno aluno = alunoRepository.findById(id).orElseThrow(() -> new RuntimeException("Aluno não encontrado!"));
@@ -91,5 +95,4 @@ public class AlunoController {
 		alunoRepository.delete(aluno); // Exclui o aluno do banco de dados
 		return ResponseEntity.noContent().build(); // Retorna uma resposta sem conteúdo (HTTP 204 No Content)
 	}
-
 }
