@@ -3,6 +3,8 @@ package com.sistema.escolar.model;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sistema.escolar.dto.UsuarioRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,7 +17,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@Entity(name = "tb_usuario")
+@Entity
 @Table(name = "tb_usuario")
 @Getter
 @Setter
@@ -36,7 +38,11 @@ public class Usuario implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private UserRole role;
 
+	@OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
+	private List<Turma> turmas; // Professores têm várias turmas
+
 	@OneToMany(mappedBy = "pai", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private List<Aluno> alunos;
 
 	public Usuario(String email, String password, UserRole role) {

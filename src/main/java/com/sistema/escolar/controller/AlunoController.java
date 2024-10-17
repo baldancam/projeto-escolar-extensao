@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import com.sistema.escolar.dto.AlunoRequestDTO;
 import com.sistema.escolar.dto.AlunoResponseDTO;
 import com.sistema.escolar.model.Aluno;
+import com.sistema.escolar.model.Turma;
 import com.sistema.escolar.model.UserRole;
 import com.sistema.escolar.model.Usuario;
 import com.sistema.escolar.repository.AlunoRepository;
+import com.sistema.escolar.repository.TurmaRepository;
 import com.sistema.escolar.repository.UsuarioRepository;
 
 @RestController
@@ -25,6 +27,9 @@ public class AlunoController {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+
+	@Autowired
+	private TurmaRepository turmaRepository;
 
 	// Método privado para validar se o usuário é PAI
 	private Usuario validarUsuarioPai(UUID paiId) {
@@ -56,23 +61,35 @@ public class AlunoController {
 		return alunoList;
 	}
 
+	
 	// Endpoint para criar um novo aluno (verifica apenas se o paiId é válido)
 	@PostMapping
 	public ResponseEntity<Void> saveAluno(@RequestBody AlunoRequestDTO data) {
 		// Verifica se o usuário associado ao aluno é PAI
 		Usuario pai = validarUsuarioPai(data.paiId());
 
+		// Busca a turma pelo ID passado no DTO
+		Turma turma = turmaRepository.findById(data.turmaId())
+				.orElseThrow(() -> new RuntimeException("Turma não encontrada!"));
+
 		// Cria e salva o aluno
-		Aluno novoAluno = new Aluno(data.nome(), data.dataNascimento(), data.matricula(), data.turma(), pai);
+		Aluno novoAluno = new Aluno(data.nome(), data.dataNascimento(), data.matricula(), turma, pai);
 		alunoRepository.save(novoAluno);
 
 		return ResponseEntity.ok().build();
 	}
 
-	// Endpoint para editar um aluno 
+	// Endpoint para editar um aluno
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> updateAluno(@PathVariable UUID id, @RequestBody AlunoRequestDTO data) {
 		Aluno aluno = alunoRepository.findById(id).orElseThrow(() -> new RuntimeException("Aluno não encontrado!"));
+
+		// Se necessário, busca e atualiza a turma
+		if (data.turmaId() != null) {
+			Turma turma = turmaRepository.findById(data.turmaId())
+					.orElseThrow(() -> new RuntimeException("Turma não encontrada!"));
+			aluno.setTurma(turma);
+		}
 
 		if (data.nome() != null)
 			aluno.setNome(data.nome());
@@ -80,8 +97,6 @@ public class AlunoController {
 			aluno.setDataNascimento(data.dataNascimento());
 		if (data.matricula() != null)
 			aluno.setMatricula(data.matricula());
-		if (data.turma() != null)
-			aluno.setTurma(data.turma());
 
 		alunoRepository.save(aluno);
 		return ResponseEntity.ok().build();

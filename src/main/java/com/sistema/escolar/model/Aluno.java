@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "tb_aluno")
 @Getter
@@ -23,13 +26,19 @@ public class Aluno {
 	private String nome;
 	private LocalDate dataNascimento;
 	private String matricula;
-	private String turma;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "turma_id")
+	@JsonIgnore
+	private Turma turma;
+	// Relaciona o aluno a uma turma
 
 	@ManyToOne
 	@JoinColumn(name = "pai_id")
+	@JsonIgnore
 	private Usuario pai; // Relaciona o aluno a um pai
 
-	public Aluno(String nome, LocalDate dataNascimento, String matricula, String turma, Usuario pai) {
+	public Aluno(String nome, LocalDate dataNascimento, String matricula, Turma turma, Usuario pai) {
 		this.nome = nome;
 		this.dataNascimento = dataNascimento;
 		this.matricula = matricula;
