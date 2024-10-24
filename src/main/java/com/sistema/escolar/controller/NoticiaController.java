@@ -58,8 +58,11 @@ public class NoticiaController {
 			String localPath = "/tmp/" + file.getOriginalFilename();
 			file.transferTo(new File(localPath));
 
-			// Faz o upload da imagem para o S3
-			String imagemUrl = s3Service.uploadFile(localPath, file.getOriginalFilename());
+			// Gera um nome de arquivo único
+			String fileName = s3Service.generateFileName(file.getOriginalFilename());
+
+			// Faz o upload da imagem para o S3 com o nome gerado
+			String imagemUrl = s3Service.uploadFile(localPath, fileName);
 
 			// Cria e salva a notícia com a URL da imagem
 			Noticia novaNoticia = new Noticia(titulo, conteudo, imagemUrl, usuario);
@@ -70,6 +73,7 @@ public class NoticiaController {
 			e.printStackTrace();
 			return ResponseEntity.status(500).build(); // Retorna um erro interno do servidor
 		}
+
 	}
 
 	// Endpoint para listar todas as notícias
@@ -107,13 +111,21 @@ public class NoticiaController {
 		return ResponseEntity.ok().build();
 	}
 
-	// Endpoint para deletar uma notícia
+	// Método para deletar uma notícia e a imagem correspondente
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteNoticia(@PathVariable UUID id) {
 		Noticia noticia = noticiaRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Notícia não encontrada!"));
 
+		// Deleta a imagem do S3
+		if (noticia.getImagemUrl() != null) {
+			String fileName = noticia.getImagemUrl().substring(noticia.getImagemUrl().lastIndexOf("/") + 1);
+			s3Service.deleteFile(fileName);
+		}
+
+		// Deleta a notícia do banco de dados
 		noticiaRepository.delete(noticia);
+
 		return ResponseEntity.noContent().build();
 	}
 }
