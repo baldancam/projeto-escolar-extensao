@@ -101,6 +101,14 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- AWS bucket S3-->
+
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
+			<version>2.28.27</version>
+		</dependency>
+
 
 	</dependencies>
 

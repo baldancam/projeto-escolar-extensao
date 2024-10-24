@@ -38,8 +38,17 @@ public class Noticia {
 	public Noticia(NoticiasRequestDTO data, Usuario usuario) {
 		this.titulo = data.titulo();
 		this.conteudo = data.conteudo();
-		this.dataPublicacao = data.dataPublicacao();
+		this.dataPublicacao = (data.dataPublicacao() != null) ? data.dataPublicacao() : LocalDateTime.now();
 		this.usuario = usuario; // Associar o usuário
 		this.imagemUrl = data.imagemUrl();
 	}
+
+	public Noticia(String titulo, String conteudo, String imagemUrl, Usuario usuario) {
+		this.titulo = titulo;
+		this.conteudo = conteudo;
+		this.imagemUrl = imagemUrl;
+		this.dataPublicacao = LocalDateTime.now(); // Definindo a data de publicação como o momento atual
+		this.usuario = usuario;
+	}
+
 }

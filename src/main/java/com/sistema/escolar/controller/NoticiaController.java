@@ -1,19 +1,14 @@
 package com.sistema.escolar.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.sistema.escolar.dto.NoticiasRequestDTO;
 import com.sistema.escolar.dto.NoticiasResponseDTO;
@@ -22,9 +17,11 @@ import com.sistema.escolar.model.Noticia;
 import com.sistema.escolar.model.UserRole;
 import com.sistema.escolar.repository.UsuarioRepository;
 import com.sistema.escolar.repository.NoticiaRepository;
+import com.sistema.escolar.service.S3Service;
 
 @RestController
 @RequestMapping("noticias")
+@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 public class NoticiaController {
 
 	@Autowired
@@ -32,6 +29,9 @@ public class NoticiaController {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+
+	@Autowired
+	private S3Service s3Service; // Injeta o serviço S3 para upload de imagens
 
 	// Método privado para validar se o usuário é ADM
 	private Usuario validarUsuarioAdm(UUID usuarioId) {
@@ -45,31 +45,42 @@ public class NoticiaController {
 		return usuario;
 	}
 
-	// Endpoint para criar uma nova notícia
-	@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
-	@PostMapping
-	public ResponseEntity<Void> saveNoticia(@RequestBody NoticiasRequestDTO data) {
+	// Endpoint para criar uma nova notícia com imagem
+	@PostMapping("/upload")
+	public ResponseEntity<Void> saveNoticiaComImagem(@RequestParam("file") MultipartFile file,
+			@RequestParam("titulo") String titulo, @RequestParam("conteudo") String conteudo,
+			@RequestParam("usuarioId") UUID usuarioId) {
 		// Verifica se o usuário é ADM
-		Usuario usuario = validarUsuarioAdm(data.usuarioId());
+		Usuario usuario = validarUsuarioAdm(usuarioId);
 
-		// Cria e salva a notícia
-		Noticia novaNoticia = new Noticia(data, usuario);
-		noticiaRepository.save(novaNoticia);
+		try {
+			// Salva o arquivo localmente (opcional)
+			String localPath = "/tmp/" + file.getOriginalFilename();
+			file.transferTo(new File(localPath));
 
-		return ResponseEntity.ok().build();
+			// Faz o upload da imagem para o S3
+			String imagemUrl = s3Service.uploadFile(localPath, file.getOriginalFilename());
+
+			// Cria e salva a notícia com a URL da imagem
+			Noticia novaNoticia = new Noticia(titulo, conteudo, imagemUrl, usuario);
+			noticiaRepository.save(novaNoticia);
+
+			return ResponseEntity.ok().build();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return ResponseEntity.status(500).build(); // Retorna um erro interno do servidor
+		}
 	}
 
 	// Endpoint para listar todas as notícias
-	@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 	@GetMapping
 	public List<NoticiasResponseDTO> getAll() {
 		List<NoticiasResponseDTO> noticiaList = noticiaRepository.findAll().stream().map(NoticiasResponseDTO::new)
 				.toList();
-		return noticiaList; // Retorna a lista de notícias
+		return noticiaList;
 	}
 
 	// Endpoint para editar uma notícia
-	@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> updateNoticia(@PathVariable UUID id, @RequestBody NoticiasRequestDTO data) {
 		Noticia noticia = noticiaRepository.findById(id)
@@ -78,7 +89,7 @@ public class NoticiaController {
 		// Verifica se o usuário é ADM
 		Usuario usuario = validarUsuarioAdm(data.usuarioId());
 
-		// Atualiza apenas os campos não nulos da notícia
+		// Atualiza os campos da notícia
 		if (data.titulo() != null) {
 			noticia.setTitulo(data.titulo());
 		}
@@ -92,18 +103,17 @@ public class NoticiaController {
 			noticia.setDataPublicacao(data.dataPublicacao());
 		}
 
-		noticiaRepository.save(noticia); // Salva as alterações no banco de dados
-		return ResponseEntity.ok().build(); // Retorna uma resposta de sucesso (HTTP 200 OK)
+		noticiaRepository.save(noticia);
+		return ResponseEntity.ok().build();
 	}
 
 	// Endpoint para deletar uma notícia
-	@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteNoticia(@PathVariable UUID id) {
+	public ResponseEntity<Void> deleteNoticia(@PathVariable UUID id) {
 		Noticia noticia = noticiaRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Notícia não encontrada!"));
 
-		noticiaRepository.delete(noticia); // Exclui a notícia do banco de dados
-		return ResponseEntity.noContent().build(); // Retorna uma resposta sem conteúdo (HTTP 204 No Content)
+		noticiaRepository.delete(noticia);
+		return ResponseEntity.noContent().build();
 	}
 }
