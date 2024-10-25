@@ -22,7 +22,6 @@ public class Cardapio {
 	@NotBlank(message = "A descrição do item é obrigatória!")
 	private String descricaoItem;
 
-
 	// Construtor completo
 	public Cardapio(String nomeItem, LocalDate data, String descricaoItem) {
 		this.nomeItem = nomeItem;
@@ -63,9 +62,4 @@ public class Cardapio {
 		this.descricaoItem = descricaoItem;
 	}
 
-	@Override
-	public String toString() {
-		return "Cardapio{" + "id=" + id + ", nomeItem='" + nomeItem + '\'' + ", data=" + data + ", descricaoItem='"
-				+ descricaoItem + '\'' + '}';
-	}
 }
