@@ -46,7 +46,7 @@ public class NoticiaController {
 	}
 
 	// Endpoint para criar uma nova notícia com imagem
-	@PostMapping("/upload")
+	@PostMapping
 	public ResponseEntity<Void> saveNoticiaComImagem(@RequestParam("file") MultipartFile file,
 			@RequestParam("titulo") String titulo, @RequestParam("conteudo") String conteudo,
 			@RequestParam("usuarioId") UUID usuarioId) {
