@@ -2,64 +2,34 @@ package com.sistema.escolar.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "tb_cardapio")
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = "id")
+@Getter
+@Setter
 public class Cardapio {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank(message = "O nome do item é obrigatório!")
-	private String nomeItem;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false, unique = true)
+	private DiaSemana diaSemana;
 
-	@NotNull(message = "A data do cardápio é obrigatória!")
-	private LocalDate data;
+	@Column(nullable = true)
+	String conteudo;
 
-	@NotBlank(message = "A descrição do item é obrigatória!")
-	private String descricaoItem;
-
-	// Construtor completo
-	public Cardapio(String nomeItem, LocalDate data, String descricaoItem) {
-		this.nomeItem = nomeItem;
-		this.data = data;
-		this.descricaoItem = descricaoItem;
+	public Cardapio(DiaSemana diaSemana, String conteudo) {
+		this.diaSemana = diaSemana;
+		this.conteudo = conteudo;
 	}
-
-	// Getters e Setters
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getNomeItem() {
-		return nomeItem;
-	}
-
-	public void setNomeItem(String nomeItem) {
-		this.nomeItem = nomeItem;
-	}
-
-	public LocalDate getData() {
-		return data;
-	}
-
-	public void setData(LocalDate data) {
-		this.data = data;
-	}
-
-	public String getDescricaoItem() {
-		return descricaoItem;
-	}
-
-	public void setDescricaoItem(String descricaoItem) {
-		this.descricaoItem = descricaoItem;
-	}
-
 }
