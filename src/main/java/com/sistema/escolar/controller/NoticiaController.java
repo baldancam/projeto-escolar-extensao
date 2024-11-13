@@ -84,32 +84,58 @@ public class NoticiaController {
 		return noticiaList;
 	}
 
-	// Endpoint para editar uma notícia
+	// Endpoint para editar uma notícia com a opção de atualizar a imagem
 	@PutMapping("/{id}")
-	public ResponseEntity<Void> updateNoticia(@PathVariable UUID id, @RequestBody NoticiasRequestDTO data) {
-		Noticia noticia = noticiaRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Notícia não encontrada!"));
+	public ResponseEntity<Void> updateNoticia(@PathVariable UUID id,
+	                                          @RequestParam("titulo") String titulo,
+	                                          @RequestParam("conteudo") String conteudo,
+	                                          @RequestParam("usuarioId") UUID usuarioId,
+	                                          @RequestParam(value = "file", required = false) MultipartFile file) {
+	    // Busca a notícia no banco de dados
+	    Noticia noticia = noticiaRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Notícia não encontrada!"));
 
-		// Verifica se o usuário é ADM
-		Usuario usuario = validarUsuarioAdm(data.usuarioId());
+	    // Verifica se o usuário é ADM
+	    Usuario usuario = validarUsuarioAdm(usuarioId);
 
-		// Atualiza os campos da notícia
-		if (data.titulo() != null) {
-			noticia.setTitulo(data.titulo());
-		}
-		if (data.conteudo() != null) {
-			noticia.setConteudo(data.conteudo());
-		}
-		if (data.imagemUrl() != null) {
-			noticia.setImagemUrl(data.imagemUrl());
-		}
-		if (data.dataPublicacao() != null) {
-			noticia.setDataPublicacao(data.dataPublicacao());
-		}
+	    try {
+	        // Atualiza os campos de texto (título e conteúdo) da notícia
+	        if (titulo != null) {
+	            noticia.setTitulo(titulo);
+	        }
+	        if (conteudo != null) {
+	            noticia.setConteudo(conteudo);
+	        }
 
-		noticiaRepository.save(noticia);
-		return ResponseEntity.ok().build();
+	        // Se uma nova imagem for enviada, exclui a antiga e faz o upload da nova
+	        if (file != null) {
+	            // Exclui a imagem antiga do S3, se existir
+	            if (noticia.getImagemUrl() != null) {
+	                String oldFileName = noticia.getImagemUrl().substring(noticia.getImagemUrl().lastIndexOf("/") + 1);
+	                s3Service.deleteFile(oldFileName);
+	            }
+
+	            // Salva o novo arquivo localmente (opcional)
+	            String localPath = "/tmp/" + file.getOriginalFilename();
+	            file.transferTo(new File(localPath));
+
+	            // Gera um nome de arquivo único para a nova imagem
+	            String newFileName = s3Service.generateFileName(file.getOriginalFilename());
+
+	            // Faz o upload da nova imagem para o S3 e atualiza a URL na notícia
+	            String newImagemUrl = s3Service.uploadFile(localPath, newFileName);
+	            noticia.setImagemUrl(newImagemUrl);
+	        }
+
+	        // Salva as alterações na notícia
+	        noticiaRepository.save(noticia);
+	        return ResponseEntity.ok().build();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(500).build(); // Retorna um erro interno do servidor
+	    }
 	}
+
 
 	// Método para deletar uma notícia e a imagem correspondente
 	@DeleteMapping("/{id}")
