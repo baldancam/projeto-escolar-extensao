@@ -1,101 +1,139 @@
-# Comunicação Escolar - Projeto de Extensão
+# 📚 Sistema de Comunicação Escolar - Back-End
 
-Este projeto visa criar uma aplicação de comunicação escolar que facilite o envio de recados, calendários, cardápios e outras informações entre a escola e os pais de alunos, permitindo uma comunicação mais centralizada e organizada.
+Um sistema robusto para facilitar a comunicação entre escolas, pais, professores e administradores, oferecendo funcionalidades essenciais como postagem de notícias, gerenciamento de usuários e consulta de cardápio semanal. Este repositório contém a implementação **back-end**, construída com **Spring Boot** e outras tecnologias modernas.
 
-## 📑 Funcionalidades
+---
 
-- **Recados:** Envio de recados individuais ou em grupo para os pais.
-- **Calendário Escolar:** Consulta de eventos e feriados escolares.
-- **Cardápio:** Consulta do cardápio escolar.
-- **Feed de Fotos:** Visualização de fotos de eventos escolares (somente administradores podem postar).
-- **Dúvidas e Suporte:** Comunicação direta entre pais e escola para dúvidas e informações.
-  
-## 🔧 Tecnologias Utilizadas
+## 🗂️ Índice
 
-- **Linguagem principal:** Java 17
-- **Frameworks:**
-  - Spring Boot
-  - Spring Security
-  - Spring Data JPA
-- **Banco de dados:** MySQL
-- **Controle de versões:** Git e GitHub
-- **Ferramentas de desenvolvimento:** Spring Tool Suite (STS)
+- [Descrição Geral](#descrição-geral)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Funcionalidades Implementadas](#funcionalidades-implementadas)
+- [Configuração do Ambiente Local](#configuração-do-ambiente-local)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Detalhes do Deploy](#detalhes-do-deploy)
+- [Contribuições](#contribuições)
 
-## 🚀 Configuração e Execução
+---
 
-### Pré-requisitos
+## 📖 Descrição Geral
 
-- **Java 17** ou superior instalado.
-- **MySQL** instalado e configurado.
-- **Maven** para gerenciamento de dependências.
+Este projeto visa aprimorar a comunicação escolar ao centralizar informações importantes em uma plataforma digital, permitindo:
+- Gerenciamento de **usuários** com diferentes níveis de acesso (Admin, Professor, Pai).
+- Publicação e consulta de **notícias** pela escola.
+- Atualização e visualização do **cardápio semanal**.
+- Integração com serviços como AWS S3 e Firebase para gerenciamento de arquivos e mensagens.
 
-### Passo a Passo para Rodar o Projeto
+O sistema prioriza segurança, organização e facilidade de acesso às informações.
 
-**1.** Clone o repositório:
+---
 
-```sh
-git clone https://github.com/seu-usuario/projeto-escolar-extensao.git
-cd projeto-escolar-extensao
+## 🛠️ Tecnologias Utilizadas
+
+### **Principais Tecnologias**
+- **Java (Spring Boot)**: Framework para desenvolvimento do back-end.
+- **JWT (Json Web Token)**: Gerenciamento de autenticação e autorização.
+- **Spring Data JPA**: Comunicação com o banco de dados.
+- **MySQL**: Banco de dados relacional.
+
+### **Serviços e Integrações**
+- **AWS S3**: Armazenamento de imagens e outros arquivos.
+- **Firebase**: Gerenciamento de mensagens em tempo real para funcionalidades de chat.
+- **Docker**: Containerização da aplicação.
+
+---
+
+## 🚀 Funcionalidades Implementadas
+
+1. **Gerenciamento de Usuários**:
+   - Cadastro, edição e exclusão de usuários.
+   - Diferenciação de permissões por **papel** (Admin, Professor, Pai).
+
+2. **Sistema de Notícias**:
+   - Criação, edição e exclusão de notícias.
+   - Upload de imagens para ilustrar as notícias.
+   - Armazenamento seguro de imagens no AWS S3.
+
+3. **Cardápio Semanal**:
+   - Visualização do cardápio pelos usuários.
+   - Atualização semanal realizada exclusivamente por administradores.
+   - Remoção de itens do cardápio mantendo a estrutura semanal.
+
+4. **Autenticação e Autorização**:
+   - Autenticação baseada em **JWT**.
+   - Controle de acesso por nível de permissão.
+
+---
+
+## 🖥️ Configuração do Ambiente Local
+
+### **Pré-requisitos**
+- **Java** (versão 17 ou superior)
+- **MySQL** (versão 8.x)
+- **Maven** (versão 3.6 ou superior)
+- **Docker** (opcional, para containerização)
+
+### **Passos para Configuração**
+
+1. **Clone o repositório**:
+   ```
+   git clone https://github.com/baldancam/projeto-escolar-extensao.git
+   cd projeto-escolar-extensao
+2. **Configure o banco de dados**:
+
+- Crie um banco de dados chamado **escolar**.
+- Configure o arquivo **application.properties** com suas credenciais do MySQL:
+```
+spring.datasource.url=jdbc:mysql://localhost:3306/escolar
+spring.datasource.username=SEU_USUARIO
+spring.datasource.password=SUA_SENHA
+spring.jpa.hibernate.ddl-auto=update
 ```
 
-**2.** Configure o banco de dados:
+3. **Instale as dependências e execute o projeto**:
 
-- **Crie um banco de dados MySQL com o nome ``sistema_escolar``.**
-- **Atualize o arquivo ``application.properties`` com suas credenciais de MySQL:**
-
- ```sh 
-spring.datasource.url=jdbc:mysql://localhost:3306/sistema_escolar?useSSL=false&serverTimezone=UTC
-spring.datasource.username=seu-usuario
-spring.datasource.password=sua-senha
 ```
-
-**3.** Compile o projeto:
-
-```sh 
 mvn clean install
-```
-
-**4.** Execute a aplicação:
-
-```sh
 mvn spring-boot:run
 ```
-
-**5.** Acesse a aplicação no navegador:
-- **URL:** [http://localhost:8080](http://localhost:8080)
-
-## 🛠️ Como Contribuir
-
-### Criando uma Branch
-
-**1.** Sempre crie uma branch a partir da ``develop``:
-
-```sh 
-git checkout develop
-git pull
-git checkout -b feature/nome-da-sua-feature
+**Acesse o sistema:**
+```
+API estará disponível em: http://localhost:8080
 ```
 
-**2.** Após concluir o desenvolvimento, faça o commit e o push:
+---
 
-```sh 
-git add .
-git commit -m "Descrição da sua feature"
-git push origin feature/nome-da-sua-feature
+## 📂 Estrutura do Projeto
+
+```
+src/main/java/com/sistema/escolar
+├── controller         # Controladores das rotas REST
+├── model              # Modelos e entidades do banco de dados
+├── repository         # Repositórios (Spring Data JPA)
+├── service            # Regras de negócio e integrações
+├── security           # Configuração de autenticação e autorização
 ```
 
-### Criando uma Pull Request
+## 🌍 Detalhes do Deploy
 
-**1.** Quando a sua feature estiver pronta, crie uma Pull Request no GitHub apontando da sua branch para a ``develop``.
-**2.** Aguarde a revisão de pelo menos um membro da equipe antes de mesclar (merge).
+O sistema foi configurado e implantado em um ambiente de produção com as seguintes tecnologias:
 
-## 📜 Regras de Contribuição
+- **AWS EC2**: Hospedagem do servidor.
+- **MySQL**: Banco de dados gerenciado.
+- **AWS S3**: Armazenamento de imagens e documentos.
 
-- A branch ``master`` está protegida, e apenas o dono do repositório pode aprovar e mesclar alterações.
-- Todas as pull requests devem passar por revisão de código.
-- Utilize a nomenclatura padrão para branches: ``feature/nome-da-feature`` ou ``bugfix/nome-do-bug``.
-  
-## 📄 Licença
+## 🤝 Contribuições
 
-Este projeto é desenvolvido como parte de um projeto de extensão acadêmica e ainda não possui uma licença definida.
+Contribuições são bem-vindas! Para colaborar:
 
+1. Faça um fork do repositório.
+2. Crie uma branch para suas alterações:
+```
+git checkout -b feature/nova-funcionalidade
+```
+3. Envie suas alterações:
+```
+git commit -m "Descrição clara da alteração"
+git push origin feature/nova-funcionalidade
+```
+4. Abra um Pull Request.
