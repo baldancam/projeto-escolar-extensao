@@ -1,5 +1,7 @@
 package com.sistema.escolar.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sistema.escolar.model.Aluno;
 import com.sistema.escolar.model.Cardapio;
 import com.sistema.escolar.model.DiaSemana;
@@ -11,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -29,15 +32,24 @@ public class CardapioController {
 	}
 
 	@PutMapping("/{diaSemana}")
-	@PreAuthorize("hasRole('ADM')")
-	public ResponseEntity<Cardapio> atualizarCardapio(@PathVariable DiaSemana diaSemana, @RequestBody String conteudo) {
-		Cardapio cardapioAtualizado = cardapioService.atualizarCardapio(diaSemana, conteudo);
-		return ResponseEntity.ok(cardapioAtualizado);
+	public ResponseEntity<Cardapio> atualizarCardapio(
+	        @PathVariable DiaSemana diaSemana,
+	        @RequestBody Map<String, Object> conteudo) { // Aceita JSON como um Map
+	    // Converte o conteúdo para string apenas se necessário
+	    String conteudoJson;
+	    try {
+	        conteudoJson = new ObjectMapper().writeValueAsString(conteudo);
+	    } catch (Exception e) {
+	        throw new RuntimeException("Erro ao converter JSON", e);
+	    }
+
+	    Cardapio cardapioAtualizado = cardapioService.atualizarCardapio(diaSemana, conteudoJson);
+	    return ResponseEntity.ok(cardapioAtualizado);
 	}
+
 
 	// Endpoint para deletar um conteudo
 	@DeleteMapping("{diaSemana}/conteudo")
-	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Void> limparConteudo(@PathVariable DiaSemana diaSemana) {
 		cardapioService.limparConteudoDoDia(diaSemana);
 		return ResponseEntity.noContent().build(); // Retorna código 204 (No Content)

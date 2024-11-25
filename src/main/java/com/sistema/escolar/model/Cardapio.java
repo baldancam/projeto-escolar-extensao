@@ -25,8 +25,9 @@ public class Cardapio {
 	@Column(nullable = false, unique = true)
 	private DiaSemana diaSemana;
 
-	@Column(nullable = true)
-	String conteudo;
+	@Lob // Adiciona suporte para JSON de maior tamanho
+	@Column(columnDefinition = "TEXT")
+	private String conteudo;
 
 	public Cardapio(DiaSemana diaSemana, String conteudo) {
 		this.diaSemana = diaSemana;
